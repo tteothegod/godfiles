@@ -10,11 +10,11 @@
                 "C:\\Users\\StarG\\Documents\\April Tag\\AprilTag.cpp",
                 "-o",
                 "C:\\Users\\StarG\\Documents\\April Tag\\AprilTag.exe",
-                "-LC:\\Users\\StarG\\Documents\\April Tag\\Curl\\curl-7.87.0_2-win64-mingw\\lib",
+                "-LC:\\godfiles\\Pokemon.api\\Curl\\curl-7.87.0_2-win64-mingw\\lib",
                 "-lcurl",
             ],
             "options": {
-                "cwd": "C:\\Users\\StarG\\Documents\\April Tag"
+                "cwd": "C:\\godfiles\\Pokemon.api"
             },
             "problemMatcher": [
                 "$gcc"
