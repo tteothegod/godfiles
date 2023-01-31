@@ -1,0 +1,28 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "build",
+            "command": "g++.exe",
+            "args": [
+                "-g",
+                "C:\\Users\\StarG\\Documents\\April Tag\\AprilTag.cpp",
+                "-o",
+                "C:\\Users\\StarG\\Documents\\April Tag\\AprilTag.exe",
+                "-LC:\\Users\\StarG\\Documents\\April Tag\\Curl\\curl-7.87.0_2-win64-mingw\\lib",
+                "-lcurl",
+            ],
+            "options": {
+                "cwd": "C:\\Users\\StarG\\Documents\\April Tag"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

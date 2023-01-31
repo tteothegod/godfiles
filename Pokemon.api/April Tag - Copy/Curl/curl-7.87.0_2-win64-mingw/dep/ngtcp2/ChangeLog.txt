@@ -1,0 +1,15 @@
+commit a4ba3f20d70d4a4d79674cee1093c55b4c1d78ed (HEAD, tag: v0.12.1, origin/release-0.12, origin/HEAD, release-0.12)
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2023-01-06
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2023-01-06
+
+    Bump package and library versions
+
+commit a5fefe65b9b8d6e850699f6c67140e9037779185
+Author:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+AuthorDate: 2022-12-30
+Commit:     Tatsuhiro Tsujikawa <tatsuhiro.t@gmail.com>
+CommitDate: 2023-01-06
+
+    bbr2: Fix assertion failure
