@@ -133,7 +133,7 @@ void IV_RANKING(string full_url, string pokemon)
         if(curl) 
         {
             curl_easy_setopt(curl, CURLOPT_URL, full_url.c_str());
-            curl_easy_setopt(curl, CURLOPT_CAINFO, "C:/godfiles/Pokemon.api/Curl/cacert-2023-01-10.pem");
+            curl_easy_setopt(curl, CURLOPT_CAINFO, "./Curl/cacert-2023-01-10.pem");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             // To verify SSL certificate
             res = curl_easy_perform(curl);
