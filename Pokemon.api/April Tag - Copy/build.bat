@@ -1,1 +1,0 @@
-g++ AprilTag.cpp -LCurl/curl-7.87.0_2-win64-mingw/lib -lcurl -o AprilTag.exe
