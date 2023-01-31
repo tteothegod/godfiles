@@ -133,7 +133,7 @@ void IV_RANKING(string full_url, string pokemon)
         if(curl) 
         {
             curl_easy_setopt(curl, CURLOPT_URL, full_url.c_str());
-            curl_easy_setopt(curl, CURLOPT_CAINFO, "C:\\Users\\StarG\\Documents\\April Tag\\Curl\\cacert-2023-01-10.pem");
+            curl_easy_setopt(curl, CURLOPT_CAINFO, "C:/godfiles/Pokemon.api/Curl/cacert-2023-01-10.pem");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             // To verify SSL certificate
             res = curl_easy_perform(curl);
@@ -143,7 +143,7 @@ void IV_RANKING(string full_url, string pokemon)
                 cout << "cURL error: " << curl_easy_strerror(res) << endl;
             } else 
             {
-                //cout << "Text data: " << Text_Data << endl;
+                cout << "Text data: " << Text_Data << endl;
             }
         }
         curl_global_cleanup();
