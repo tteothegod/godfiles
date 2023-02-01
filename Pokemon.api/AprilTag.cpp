@@ -127,8 +127,8 @@ void IV_RANKING(string full_url, string pokemon)
         curl_global_init(CURL_GLOBAL_ALL);
         curl = curl_easy_init();
 
-        full_url = "https://www.stadiumgaming.gg/rank-checker?pokemon=";
-        full_url = full_url + pokemon;
+        full_url = "https://pvpivs.com/?mon=Golem";
+        full_url = full_url + pokemon + "&r=1000&cp=1500&fel=mirror";
 
         if(curl) 
         {
