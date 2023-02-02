@@ -18,8 +18,8 @@ string Text_Data;
 string full_url;
 result overall_rank;
 
-size_t WriteCallback(char* buf, size_t size, size_t nmemb, void* userp) {
-    Text_Data.append(buf, size * nmemb);
+size_t WriteCallback(char* ptr, size_t size, size_t nmemb, string* data) {
+    data->append(ptr, size * nmemb);
     return size * nmemb;
 }
 
@@ -90,7 +90,23 @@ result BL_RANK_CHECKER(string pokemon)
                         process_line.erase(0, delimiter_pose + delimiter.length());
                         l = l + 1;
                     }
+                    
                     break;
+                }
+                else 
+                {
+                    if (k == 0)
+                    {
+                    ranking_g[2] = "0";
+                    }
+                    if (k == 1)
+                    {
+                    ranking_u[2] = "0";
+                    }
+                    if (k == 2)
+                    {
+                    ranking_m[2] = "0";
+                    }
                 }
             }
             data.clear();
@@ -102,6 +118,7 @@ result BL_RANK_CHECKER(string pokemon)
         }
     }
 
+    if (ranking_g )
     if (stof(ranking_g[2]) > stof(ranking_u[2]) && stof(ranking_g[2]) > stof(ranking_m[2]))
     {
         overall_rank.o_rank = "Great League";
@@ -127,24 +144,26 @@ void IV_RANKING(string full_url, string pokemon)
         curl_global_init(CURL_GLOBAL_ALL);
         curl = curl_easy_init();
 
-        full_url = "https://pvpivs.com/?mon=Golem";
-        full_url = full_url + pokemon + "&r=1000&cp=1500&fel=mirror";
+        full_url = "https://pvpivs.com/?mon=";
+        full_url = full_url + pokemon + "&r=1&cp=1500&fel=false";
+        cout << full_url;
 
+        string Text_Data;
         if(curl) 
         {
             curl_easy_setopt(curl, CURLOPT_URL, full_url.c_str());
-            curl_easy_setopt(curl, CURLOPT_CAINFO, "./Curl/cacert-2023-01-10.pem");
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-            // To verify SSL certificate
-            res = curl_easy_perform(curl);
-            curl_easy_cleanup(curl);
-            if(res != CURLE_OK) 
-            {
-                cout << "cURL error: " << curl_easy_strerror(res) << endl;
-            } else 
-            {
-                cout << "Text data: " << Text_Data << endl;
-            }
+        curl_easy_setopt(curl, CURLOPT_CAINFO, "./Curl/cacert-2023-01-10.pem");
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &Text_Data);
+        res = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+        if(res != CURLE_OK) 
+        {
+            cout << "cURL error: " << curl_easy_strerror(res) << endl;
+        } else 
+        {
+            cout << "HTML data: " << Text_Data << endl;
+        }
         }
         curl_global_cleanup();
     }
