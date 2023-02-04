@@ -46,15 +46,14 @@ result BL_RANK_CHECKER(string pokemon)
 
         if (k == 0)
         {
-            file_name = "GreatLeague.csv";
-        }
-        if (k == 1)
+            file_name = "league/GreatLeague.csv";
+        else if (k == 1)
         {
-            file_name = "UltraLeague.csv";
+            file_name = "./league/UltraLeague.csv";
         }
         else if (k == 2)
         {
-            file_name = "MasterLeague.csv";
+            file_name = "./league/MasterLeague.csv";
         }
         ifstream file(file_name);
         if (file.is_open()) 
@@ -147,7 +146,7 @@ void IV_RANKING(string full_url, string pokemon, string iv, result overall_rank)
         curl_global_init(CURL_GLOBAL_ALL);
         curl = curl_easy_init();
         full_url = "https://pvpivs.com/?mon=" + pokemon + "&r=0&cp=" + overall_rank.league + "&fel=mirror&IVs=" + iv;
-        cout << full_url;
+        cout << full_url << endl;
 
         string Text_Data;
         if(curl) 
@@ -168,6 +167,7 @@ void IV_RANKING(string full_url, string pokemon, string iv, result overall_rank)
         }
         curl_global_cleanup();
         string command = "open " + full_url;
+        cout << command << "\n";
         int result = system(command.c_str());
         return;
     }
@@ -177,7 +177,7 @@ int main()
 {
     printf("Enter a pokemon: ");
     cin >> pokemon;
-    printf("Enter Iv");
+    printf("Enter Iv: ");
     cin >> iv;
     printf("\n");
 
