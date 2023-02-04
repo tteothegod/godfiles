@@ -137,10 +137,15 @@ result BL_RANK_CHECKER(string pokemon)
 void IV_RANKING(string pokemon, string iv, result overall_rank) 
     {
         string full_url = "https://pvpivs.com/?mon=" + pokemon + "&r=0&cp=" + overall_rank.league + "&fel=mirror&IVs=" + iv;
-        cout << full_url << "\n\n";
-
         string command = "open '" + full_url + "'";
-        system(command.c_str());
+        if (overall_rank.o_percent >= 70)
+        {
+            system(command.c_str());
+        }
+        else
+        {
+            cout << "This pokemons league prevelence is too low \n";
+        }
         return;
     }
 
