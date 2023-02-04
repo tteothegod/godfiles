@@ -162,7 +162,7 @@ void IV_RANKING(string full_url, string pokemon)
             cout << "cURL error: " << curl_easy_strerror(res) << endl;
         } else 
         {
-            cout << "HTML data: " << Text_Data << endl;
+            //cout << "HTML data: " << Text_Data << endl;
         }
         }
         curl_global_cleanup();
