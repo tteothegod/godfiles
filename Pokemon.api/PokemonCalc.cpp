@@ -23,7 +23,10 @@ result BL_RANK_CHECKER(string pokemon)
     vector<string> data;
     string file_name;
     string delimiter = ",";
+    string delim_shadow = "Shadow";
+    size_t delim_shadow_pose = 0;
     size_t delimiter_pose = 0;
+    string delim_pokemon;
     string process_line;
     string ranking_g[17];
     string ranking_u[17];
@@ -46,6 +49,16 @@ result BL_RANK_CHECKER(string pokemon)
             file_name = "./league/MasterLeague.csv";
         }
 
+        if ((delim_shadow_pose = pokemon.find(delim_shadow)) != std::string::npos)
+        {
+            pokemon.erase(0, delim_shadow_pose + delim_shadow.length() + 1);
+            delim_pokemon = pokemon + " (Shadow)";
+        }
+        else
+        {
+            delim_pokemon = pokemon;
+        }
+
         ifstream file(file_name);
         if (file.is_open()) 
         {
@@ -56,7 +69,7 @@ result BL_RANK_CHECKER(string pokemon)
             for (int i = 0; i < data.size(); ++i) 
             {
                 const string &entry = data[i];
-                if (entry.find(pokemon) != string::npos) 
+                if (entry.find(delim_pokemon) != string::npos) 
                 {
                     process_line = entry;
                     while ((delimiter_pose = process_line.find(delimiter)) != std::string::npos)
@@ -98,7 +111,7 @@ result BL_RANK_CHECKER(string pokemon)
         }
         else 
         {
-            cout << "Error opening file\n";
+            std::cout << "Error opening file\n";
         }
     }
     if (stof(ranking_g[2]) > stof(ranking_u[2]) && stof(ranking_g[2]) > stof(ranking_m[2]))
@@ -124,42 +137,51 @@ result BL_RANK_CHECKER(string pokemon)
 
 void IV_RANKING(string pokemon, string iv, result overall_rank) 
     {
+        string shadow = "";
         iv = iv + ",";
-        string delimiter = ",";
-        size_t delimiter_pose = 0;
+        string delim_comma = ",";
+        size_t delim_comma_pose = 0;
+        string delim_shadow = "Shadow";
+        size_t delim_shadow_pose = 0;
         string ivs[3];
         int i = 0;
-        while ((delimiter_pose = iv.find(delimiter)) != std::string::npos)
+        while ((delim_comma_pose = iv.find(delim_comma)) != std::string::npos)
         {
-            ivs[i] = iv.substr(0, delimiter_pose);
-            iv.erase(0, delimiter_pose + delimiter.length());
+            ivs[i] = iv.substr(0, delim_comma_pose);
+            iv.erase(0, delim_comma_pose + delim_comma.length());
             i = i + 1;
         }
+        if (pokemon.find(delim_shadow) != std::string::npos)
+        {
+            shadow = "_true";
+            pokemon.erase(0, delim_shadow_pose + delim_shadow.length() + 1);
+
+        }
         iv = ivs[0] + "_" + ivs[1] + "_" + ivs[2];
-        string full_url = "https://pvpivs.com/?mon=" + pokemon + "&r=0&cp=" + overall_rank.league + "&fel=mirror&IVs=" + iv;
+        string full_url = "https://pvpivs.com/?mon=" + pokemon + "&r=0&cp=" + overall_rank.league + "&fel=mirror&IVs=" + iv + shadow;
         string command = "open '" + full_url + "'";
+
         if (overall_rank.o_percent >= 70)
         {
             system(command.c_str());
         }
         else
         {
-            cout << pokemon + "'s league rating is too low \n";
+            std::cout << pokemon + "'s league rating is too low \n";
         }
         return;
     }
 
 
 int main() 
-{       
+{   
     printf("Enter a pokemon: ");
     cin >> pokemon;
     printf("Enter Iv: ");
     cin >> iv;
     printf("\n");
-
     BL_RANK_CHECKER(pokemon);
-    cout << overall_rank.o_rank << " " << overall_rank.o_percent << "\n";
+    std::cout << overall_rank.o_rank << " " << overall_rank.o_percent << "\n";
     IV_RANKING(pokemon, iv, overall_rank);
     return 0;
 }
