@@ -1,7 +1,5 @@
 #include <iostream>
-#include <string>
 #include <fstream>
-#include <string>
 #include <vector>
 
 using namespace std;
@@ -21,54 +19,46 @@ string iv;
 
 result BL_RANK_CHECKER(string pokemon)
 {
-    // cout << pokemon;
     string line;
     vector<string> data;
     string file_name;
     string delimiter = ",";
     size_t delimiter_pose = 0;
     string process_line;
-
     string ranking_g[17];
     string ranking_u[17];
     string ranking_m[17];
 
     for(int k = 0; k < 3; k++)
     {
-
         int l = 1;
 
         if (k == 0)
         {
-            file_name = "GreatLeague.csv";
+            file_name = "./league/GreatLeague.csv";
         }
         if (k == 1)
         {
-            file_name = "UltraLeague.csv";
+            file_name = "./league/UltraLeague.csv";
         }
         else if (k == 2)
         {
-            file_name = "MasterLeague.csv";
+            file_name = "./league/MasterLeague.csv";
         }
+
         ifstream file(file_name);
         if (file.is_open()) 
         {
-            // cout << "file open \n";
             while (getline(file, line)) 
             {
                 data.push_back(line);
-                // cout << "haha \n";
             }
-
             for (int i = 0; i < data.size(); ++i) 
             {
-                // cout << i << " ";
-                const auto &entry = data[i];
+                const string &entry = data[i];
                 if (entry.find(pokemon) != string::npos) 
                 {
-                    // cout << "Found Pokemon: " << entry << '\n';
                     process_line = entry;
-
                     while ((delimiter_pose = process_line.find(delimiter)) != std::string::npos)
                     {
                         if(k == 0)
@@ -86,28 +76,26 @@ result BL_RANK_CHECKER(string pokemon)
                         process_line.erase(0, delimiter_pose + delimiter.length());
                         l = l + 1;
                     }
-                    
                     break;
                 }
                 else 
                 {
                     if (k == 0)
                     {
-                    ranking_g[2] = "0";
+                        ranking_g[2] = "0";
                     }
                     if (k == 1)
                     {
-                    ranking_u[2] = "0";
+                        ranking_u[2] = "0";
                     }
                     if (k == 2)
                     {
-                    ranking_m[2] = "0";
+                        ranking_m[2] = "0";
                     }
                 }
             }
             data.clear();
         }
-
         else 
         {
             cout << "Error opening file\n";
@@ -136,6 +124,18 @@ result BL_RANK_CHECKER(string pokemon)
 
 void IV_RANKING(string pokemon, string iv, result overall_rank) 
     {
+        iv = iv + ",";
+        string delimiter = ",";
+        size_t delimiter_pose = 0;
+        string ivs[3];
+        int i = 0;
+        while ((delimiter_pose = iv.find(delimiter)) != std::string::npos)
+        {
+            ivs[i] = iv.substr(0, delimiter_pose);
+            iv.erase(0, delimiter_pose + delimiter.length());
+            i = i + 1;
+        }
+        iv = ivs[0] + "_" + ivs[1] + "_" + ivs[2];
         string full_url = "https://pvpivs.com/?mon=" + pokemon + "&r=0&cp=" + overall_rank.league + "&fel=mirror&IVs=" + iv;
         string command = "open '" + full_url + "'";
         if (overall_rank.o_percent >= 70)
@@ -144,14 +144,14 @@ void IV_RANKING(string pokemon, string iv, result overall_rank)
         }
         else
         {
-            cout << "This pokemons league prevelence is too low \n";
+            cout << pokemon + "'s league rating is too low \n";
         }
         return;
     }
 
 
 int main() 
-{
+{       
     printf("Enter a pokemon: ");
     cin >> pokemon;
     printf("Enter Iv: ");

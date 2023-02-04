@@ -46,7 +46,7 @@ result BL_RANK_CHECKER(string pokemon)
 
         if (k == 0)
         {
-            file_name = "league/GreatLeague.csv";
+            file_name = "/league/GreatLeague.csv";
         else if (k == 1)
         {
             file_name = "./league/UltraLeague.csv";
