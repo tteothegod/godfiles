@@ -117,8 +117,6 @@ result BL_RANK_CHECKER(string pokemon)
             cout << "Error opening file\n";
         }
     }
-
-    if (ranking_g )
     if (stof(ranking_g[2]) > stof(ranking_u[2]) && stof(ranking_g[2]) > stof(ranking_m[2]))
     {
         overall_rank.o_rank = "Great League";
@@ -162,7 +160,7 @@ void IV_RANKING(string full_url, string pokemon)
             cout << "cURL error: " << curl_easy_strerror(res) << endl;
         } else 
         {
-            //cout << "HTML data: " << Text_Data << endl;
+            // cout << "HTML data: " << Text_Data << endl;
         }
         }
         curl_global_cleanup();
