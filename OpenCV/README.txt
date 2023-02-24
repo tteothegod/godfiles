@@ -1,0 +1,1 @@
+g++ cv.cpp -o cv -LC:/Gogoo/OpenCV/curl-7.87.0_2-win64-mingw/lib -lcurl

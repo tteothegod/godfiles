@@ -163,7 +163,7 @@ void IV_RANKING(string pokemon, string iv, result overall_rank)
 
         if (overall_rank.o_percent >= 70)
         {
-            system(command.c_str());
+            //system(command.c_str());
         }
         else
         {
@@ -178,7 +178,7 @@ int main()
     printf("Enter a pokemon: ");
     cin >> pokemon;
     printf("Enter Iv: ");
-    cin >> iv;
+    //cin >> iv;
     printf("\n");
     BL_RANK_CHECKER(pokemon);
     std::cout << overall_rank.o_rank << " " << overall_rank.o_percent << "\n";
