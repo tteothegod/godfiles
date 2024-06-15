@@ -1,0 +1,1 @@
+g++ -g src/*.cpp -std=c++14 -I/usr/local/include/opencv4 -lopencv_videoio -lopencv_core -lopencv_features2d -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lpthread -Ofast

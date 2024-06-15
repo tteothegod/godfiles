@@ -1,0 +1,3 @@
+/Users/StarG/Documents/Gogoo/Cones/build/CMakeFiles/Cones.dir
+/Users/StarG/Documents/Gogoo/Cones/build/CMakeFiles/edit_cache.dir
+/Users/StarG/Documents/Gogoo/Cones/build/CMakeFiles/rebuild_cache.dir

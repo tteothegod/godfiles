@@ -1,0 +1,1 @@
+g++ -g -std=c++14 -I/opt/homebrew/include -I/opt/X11/include src/*.cpp -L/opt/homebrew/Cellar/glfw/3.4/lib -L/opt/X11/lib -lglfw -lGL -lX11 -framework CoreFoundation -framework CoreGraphics -Ofast

@@ -1,0 +1,1 @@
+g++ -g src/*.cpp -DI_AM_ON_MAC -std=c++14 -I/opt/homebrew/include/opencv4 -L/opt/homebrew/lib/ -lopencv_videoio -lopencv_core -lopencv_features2d -lopencv_imgproc -lopencv_highgui -lopencv_calib3d -lopencv_imgcodecs -lopencv_shape -L/opt/X11/lib -lX11 -Ofast

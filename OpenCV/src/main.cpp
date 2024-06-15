@@ -13,13 +13,15 @@ std::vector<cv::Rect> detectFaces(const cv::Mat& image) {
 
     // detect faces in image
     std::vector<cv::Rect> faces;
-    faceCascade.detectMultiScale(image, faces, 2, 2, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+    faceCascade.detectMultiScale(image, faces, 1.1, 2, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
     return faces;
 }
 
 int main() {
-    cv::VideoCapture cap(1);
+
+    string video_path = "/Users/StarG/Documents/GitHub/godfiles/OpenCV/resources/video.mp4";
+    cv::VideoCapture cap(video_path);
 
     // check if video opened successfully
     if (!cap.isOpened()) {
