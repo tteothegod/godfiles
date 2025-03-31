@@ -30,7 +30,7 @@ float yellowDetector(cv::Vec3b pixelColor);
 
 v2 getBinaryCenter(std::vector<cv::Point> updatedContours);
 
-std::vector<v2> furthestEdge(std::vector<cv::Point> updatedContours, v2 avgPoint, vectorDerivationMethod method);
+std::vector<v2> furthestEdge(std::vector<cv::Point> updatedContours, v2& avgPoint, vectorDerivationMethod method);
 
 std::vector<v2> leftPerpendicularEdge(std::vector<cv::Point> updatedContours, cv::Mat frame, v2 vector, v2 avgPoint);
 

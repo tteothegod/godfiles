@@ -18,7 +18,7 @@ int main()
 {
     int AMT_OF_MODEL_IMGS = 5;
 
-    cv::VideoCapture cap(2);
+    cv::VideoCapture cap(1);
     
     if (!cap.isOpened()) 
     {
@@ -83,6 +83,17 @@ int main()
 
             sort(updatedContours.begin(), updatedContours.end(), compareContourAreas);
 
+            const int amt_of_imgs = 1;
+            const int img_widths = 20;
+            const int img_heights = 20;
+            
+            // Create neural network
+            NeuralNetwork* nn = new NeuralNetwork(img_widths * img_heights, 10, 1);
+            nn->weights_ih = loadMatrixData("./src/nn_presets/w_ih_data.txt");
+            nn->weights_ho = loadMatrixData("./src/nn_presets/w_ho_data.txt");
+            nn->bias_h = loadMatrixData("./src/nn_presets/bias_ih.txt");
+            nn->bias_o = loadMatrixData("./src/nn_presets/bias_ho.txt");
+
             // Find the center of the cone by averaging all of the x and y values
             if(!updatedContours.empty())
             {
@@ -118,10 +129,6 @@ int main()
 
                         ////////////////////////////////////////////// *Neural Network Code* //////////////////////////////////////////////
 
-                        const int amt_of_imgs = 1;
-                        const int img_widths = 20;
-                        const int img_heights = 20;
-
                         // Load images
                         cv::Mat prediction_img[amt_of_imgs] = {transformationBinary};
                         cv::resize(prediction_img[0], prediction_img[0], cv::Size(img_widths, img_heights), 0, 0, cv::INTER_LINEAR );
@@ -130,12 +137,6 @@ int main()
                         Test_Data* pred_data = new Test_Data(amt_of_imgs, img_widths * img_heights, 1);
                         pred_data->loadImages(img_widths, img_heights, prediction_img);
 
-                        // Create neural network
-                        NeuralNetwork* nn = new NeuralNetwork(img_widths * img_heights, 10, 1);
-                        nn->weights_ih = loadMatrixData("./src/nn_presets/w_ih_data.txt");
-                        nn->weights_ho = loadMatrixData("./src/nn_presets/w_ho_data.txt");
-                        nn->bias_h = loadMatrixData("./src/nn_presets/bias_ih.txt");
-                        nn->bias_o = loadMatrixData("./src/nn_presets/bias_ho.txt");
 
                         Matrix_* prediction = nn->feedForward(pred_data->training_array[0]);
                         float prob_cone = prediction->matrix[0][0];
@@ -143,6 +144,8 @@ int main()
                         {
                             prediction->print();
                             is_cone = true;
+                            imshow("hola", transformationBinary); 
+
                         }
                         else
                         {
@@ -156,11 +159,9 @@ int main()
                         }
                     }
 
-
                     // Get the bounding rectangle of the contour
                     if(is_cone)
                     {
-
                         cv::Rect rect = cv::boundingRect(updatedContours[i]);
                         // Draw the rectangle on the original frame
                         cv::rectangle(frame, rect, cv::Scalar(0, 255, 0), 2);
@@ -177,7 +178,6 @@ int main()
                         //     cv::imwrite(img_save_name, transformationBinary);
                         //     saved_imgs++;
                         // }
-
                     }
 
                     // else if(contourArea(updatedContours[i]) > 80000)
@@ -210,15 +210,16 @@ int main()
                             // cv::line(frame, {(int)(initial_cone_center.x - rect.width/2), (int) initial_cone_center.y}, {(int)(initial_cone_center.x + rect.width/2), (int) initial_cone_center.y}, cv::Scalar(50, 0, 230), 2);
                             // cv::line(frame, {(int) initial_cone_center.x, (int)(initial_cone_center.y - rect.height/2)}, {(int) initial_cone_center.x, (int)(initial_cone_center.y + rect.height/2)}, cv::Scalar(50, 0, 230), 2);
                         // }
-                        imshow("hola", transformationBinary); 
 
 
                     }     
                 }
             }
 
+            // cv::imshow("binary",  yellow_mask);
+
             cv::imshow("binary",  yellow_mask);
-            cv::imshow("original",  frame);
+            // cv::imshow("original",  frame);
             cv::waitKey(1);
     
             // net code error checking etc

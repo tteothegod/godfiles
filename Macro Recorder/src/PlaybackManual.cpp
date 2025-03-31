@@ -8,7 +8,7 @@ void pushManuallyExecutableEvents(Properties* props)
     {
         Event event;
         event.type = EVENT_LEFT_CLICK_DOWN;
-        event.mouse_click.position = {578, 863};
+        event.mouse_click.position = {234, 863};
         pushEvent(&props->mgr, event);
     }
     {

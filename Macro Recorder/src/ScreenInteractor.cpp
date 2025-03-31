@@ -10,7 +10,6 @@
 
 void ScreenInteractor::click(int x, int y, ClickType click_type) 
 {
-
 #ifdef __APPLE__
 
     switch (click_type)

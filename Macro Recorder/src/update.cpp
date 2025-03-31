@@ -275,17 +275,18 @@ int update(Properties* props)
 
 bool isEscapeKeyPressed() 
 {
-#ifdef __APPLE__
-    // Get the current state of the keyboard
+    // Get a list of all keys currently pressed
     CGEventRef event = CGEventCreate(NULL);
-    bool isEscapePressed = (CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode) == 36);
+    if (!event) return false;
+
+    // Get the virtual keycode for the Escape key (53)
+    bool isEscapePressed = CGEventSourceKeyState(kCGEventSourceStateHIDSystemState, 53);
+
     CFRelease(event);
-    if(isEscapePressed) printf("pressed\n");
+    
+    if (isEscapePressed) printf("Esc Pressed!\n");
+
     return isEscapePressed;
-#else
-    // Implement similar logic for other platforms if needed
-    return false; // Placeholder return for non-macOS platforms
-#endif
 }
 
 void checkInput(Properties* props) {

@@ -63,159 +63,67 @@ v2 getBinaryCenter(std::vector<cv::Point> updatedContours)
     return output;
 }
 
-std::vector<v2> furthestEdge(std::vector<cv::Point> updatedContours, v2 avgPoint, vectorDerivationMethod method)
+std::vector<v2> furthestEdge(std::vector<cv::Point> updatedContours, v2& avgPoint, vectorDerivationMethod method)
 {
-    std::vector<v2> contourMaxMin;
-    //Places the contours of the largest contour in a vector
-    if(!updatedContours.empty())
-    {
-        for(int i = 0; i < updatedContours.size(); i++)
-        {
-            contourMaxMin.push_back({(float) updatedContours[i].x, (float) updatedContours[i].y});
-        }
-    }
-
-    std::vector<cv::Point> contour = updatedContours;
-
-    // Declares output vector
     std::vector<v2> outputs;
-    v2 avg_cone_end;
 
-    if(method == RANGE_AVERAGE)
+    if (method == LONGEST_DISTANCE) 
     {
-        sort(contourMaxMin.begin(), contourMaxMin.end(), compareMinY);
-        int min_y = contourMaxMin[0].y;
-
-        // for (int i = 0; i < contourMaxMin.size(); i++)
-        // {
-        //     std::cout << contourMaxMin[i].y << "\n";
-        // }
-
-        std::cout << contourMaxMin.size() << "  " << "\n";
-
-        sort(contourMaxMin.begin(), contourMaxMin.end(), compareMaxY);
-        int max_y = contourMaxMin[0].y;
-
-        sort(contourMaxMin.begin(), contourMaxMin.end(), compareMinX);
-        int min_x = contourMaxMin[0].x;
-
-        sort(contourMaxMin.begin(), contourMaxMin.end(), compareMaxX);
-        int max_x = contourMaxMin[0].x;
-
-        float bottom_y = avgPoint.y - min_y;
-        float top_y = max_y - avgPoint.y;
-        float bottom_x = avgPoint.x - min_x;
-        float top_x = max_x - avgPoint.x;
-
-        //std::cout << bottom_y << "  "<< top_y << "  " << bottom_x << "  "<< top_x << "  " << std::endl;
-        std::cout << max_y << "  "<< avgPoint.y << "  " << top_y << std::endl;
-
-        int accum_y = 0;
-        int pos_y = 0;
-        int accum_x = 0;
-        int pos_x = 0;
-        float avg_y = 0;
-        float avg_x = 0;
-        if(top_y > bottom_y)
+        if (updatedContours.empty()) 
         {
-            for (int i = 0; i < contourMaxMin.size(); i++)
-            {
-                if (contourMaxMin[i].y > avgPoint.y)
-                {
-                    pos_y++;
-                    accum_y = accum_y + contourMaxMin[i].y;
-
-                }
-            }
-            avg_y = accum_y/pos_y;
+            return outputs; // Return empty if no contours
         }
 
-        else
-        {
-            for (int i = 0; i < contourMaxMin.size(); i++)
-            {
-                if (contourMaxMin[i].y < avgPoint.y)
-                {
-                    pos_y++;
-                    accum_y = accum_y + contourMaxMin[i].y;
+        // Initialize variables to track the farthest point
+        float max_distance = -1;
+        v2 farthest_point = {0, 0};
 
-                }
-            }
+        // Iterate through all contour points
+        for (const auto& contourPoint : updatedContours) {
+            float dx = avgPoint.x - contourPoint.x;
+            float dy = avgPoint.y - contourPoint.y;
+            float distance = dx * dx + dy * dy; // Avoid sqrt for efficiency
 
-            avg_y = accum_y/pos_y;
-        }
-
-        for (int i = 0; i < contourMaxMin.size(); i++)
-        {
-            if (contourMaxMin[i].y == avg_y)
-            {
-                pos_x++;
+            // Update farthest point if this point is farther
+            if (distance > max_distance) {
+                max_distance = distance;
+                farthest_point = {static_cast<float>(contourPoint.x), static_cast<float>(contourPoint.y)};
             }
         }
 
-        for (int i = 0; i < contourMaxMin.size(); i++)
-        {
-            if (contourMaxMin[i].y == avg_y)
-            {
-                accum_x = accum_x + contourMaxMin[i].x;
-            }
-        }
-        avg_x = accum_x / pos_x;
+        // If needed, calculate the actual distance (with sqrt)
+        max_distance = std::sqrt(max_distance);
 
-        avg_cone_end = {round(avg_x), round(avg_y)};
-        std::cout << "AVG POINT:" << avg_cone_end.x << "," << avg_cone_end.y << "\n";
-
-
-        outputs.push_back(avg_cone_end);
-        outputs.push_back({0, (float) max_y});
-        outputs.push_back({0, (float) avgPoint.y});
-
-    }
-    else if(method == LONGEST_DISTANCE)
-    {
-        //Declares Vectors to be used
-        std::vector<dv2> dist_and_point;
-
-        // Goes through every contour point and finds the distance to the point
-        for (size_t i = 0; i < contour.size(); i++)
-        {
-            // Iterate through all the points in the contour
-            int x = contour[i].x;
-            int y = contour[i].y;
-
-            // Saves the [i] distance and point to the vector
-            float distance = sqrtf(((avgPoint.x - x) * (avgPoint.x - x)) + ((avgPoint.y - y) *(avgPoint.y - y)));
-            dist_and_point.push_back({{static_cast<float>(x), static_cast<float>(y)}, distance});
-        }
-
-        // Sorts the values in the vector to set cone_end to the longesst point
-        sort(dist_and_point.begin(), dist_and_point.end(), compareDv2ByDistMax);
-        v2 cone_end = {dist_and_point[0].point.x, dist_and_point[0].point.y};
-
-        // Find the of the longest 20 of the distance vectors
+        // Optionally, calculate the average of the top N farthest points
         int average_amount = 20;
-        v2 accum_point = {0,0};
+        std::vector<v2> top_points;
+        float threshold_distance = max_distance - 10; // Example threshold
 
-        // Iterates through first 20 vectors to add them to a accumulated vector
-        for(int i = 0; i < average_amount; i++)
-        {
-            accum_point = {accum_point.x + dist_and_point[i].point.x, accum_point.y + dist_and_point[i].point.y};
+        for (const auto& contourPoint : updatedContours) {
+            float dx = avgPoint.x - contourPoint.x;
+            float dy = avgPoint.y - contourPoint.y;
+            float distance = std::sqrt(dx * dx + dy * dy);
+
+            if (distance >= threshold_distance) {
+                top_points.push_back({static_cast<float>(contourPoint.x), static_cast<float>(contourPoint.y)});
+                if (top_points.size() >= average_amount) {
+                    break; // Stop after collecting enough points
+                }
+            }
         }
 
-        // Divides the accumulated vector by the amount of things averaged
-        avg_cone_end = {accum_point.x / average_amount, accum_point.y / average_amount};
-
-        // if the difference between the average and the longest point is greater than 10 it filteres out the false average.
-        if(dist_and_point[0].dist - sqrtf(((avg_cone_end.x - avgPoint.x) * (avg_cone_end.x - avgPoint.x)) + ((avg_cone_end.y - avgPoint.y) *(avg_cone_end.y - avgPoint.y))) > 10)
-        {
-            avg_cone_end = dist_and_point[0].point;
+        // Calculate the average of the top points
+        v2 avg_cone_end = {0, 0};
+        for (const auto& point : top_points) {
+            avg_cone_end.x += point.x;
+            avg_cone_end.y += point.y;
         }
+        avg_cone_end.x /= top_points.size();
+        avg_cone_end.y /= top_points.size();
+
+        // Add the farthest point and the average point to the outputs
+        outputs.push_back(farthest_point);
         outputs.push_back(avg_cone_end);
-        contour.clear();
-        updatedContours.clear();
-        contourMaxMin.clear();
-        dist_and_point.clear();
-
     }
 
     return outputs;
@@ -371,15 +279,25 @@ void transform_pixel(v2 v1_model, v2 v2_model,
 {
     // Compute the transformation matrices
     Matrix model_mat, input_mat, transform_mat;
-    model_mat.m[0][0] = v1_model.x / length(v1_model);
-    model_mat.m[0][1] = v1_model.y / length(v1_model);
-    model_mat.m[1][0] = v2_model.x / length(v2_model);
-    model_mat.m[1][1] = v2_model.y / length(v2_model);
+    // model_mat.m[0][0] = v1_model.x / length(v1_model);
+    // model_mat.m[0][1] = v1_model.y / length(v1_model);
+    // model_mat.m[1][0] = v2_model.x / length(v2_model);
+    // model_mat.m[1][1] = v2_model.y / length(v2_model);    
+    
+    // input_mat.m[0][0] = v1_input.x / length(v1_input);
+    // input_mat.m[0][1] = v1_input.y / length(v1_input);
+    // input_mat.m[1][0] = v2_input.x / length(v2_input);
+    // input_mat.m[1][1] = v2_input.y / length(v2_input);
+    
+    model_mat.m[0][0] = v1_model.x;
+    model_mat.m[0][1] = v1_model.y;
+    model_mat.m[1][0] = v2_model.x;
+    model_mat.m[1][1] = v2_model.y;
 
-    input_mat.m[0][0] = v1_input.x / length(v1_input);
-    input_mat.m[0][1] = v1_input.y / length(v1_input);
-    input_mat.m[1][0] = v2_input.x / length(v2_input);
-    input_mat.m[1][1] = v2_input.y / length(v2_input);
+    input_mat.m[0][0] = v1_input.x;
+    input_mat.m[0][1] = v1_input.y;
+    input_mat.m[1][0] = v2_input.x;
+    input_mat.m[1][1] = v2_input.y;
 
     transform_mat = matrix_inverse(model_mat) * input_mat;
 
@@ -624,7 +542,7 @@ void processFrameVectors(v2& new_cone_center, std::vector<v2>& cone_top, std::ve
     initial_cone_center = getBinaryCenter(working_contour);
     // Finds the initial vector for the top of the cone
 
-    initial_cone_top = furthestEdge(working_contour, v2 {static_cast<float>(initial_cone_center.x), static_cast<float>(initial_cone_center.y)}, mode);
+    initial_cone_top = furthestEdge(working_contour, initial_cone_center, mode);
 
     // Add a small vector to the cones center
     new_cone_center = {static_cast<float>(initial_cone_center.x) - ((initial_cone_top[0].x - initial_cone_center.x) / 3), static_cast<float>(initial_cone_center.y) - ((initial_cone_top[0].y - initial_cone_center.y)/ 3)};
@@ -643,10 +561,10 @@ void processModelVectors(cv::Mat three_chann_model_cone, v2& new_model_cone_cent
     v2 init_model_cone_center;
     std::vector<v2> init_model_cone_top;
 
+    //TODO: remove and replace with contours already calculated
     //Convert the image from 3 channel to 1 channel
     cv::cvtColor(three_chann_model_cone, model_temp_img, cv::COLOR_BGR2GRAY);
     cv::threshold(model_temp_img, model_temp_img, 128, 255, cv::THRESH_BINARY);
-
     // Find the contours of the model image
     std::vector<std::vector<cv::Point>> modelContours;
     cv::findContours(model_temp_img, modelContours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
@@ -655,7 +573,7 @@ void processModelVectors(cv::Mat three_chann_model_cone, v2& new_model_cone_cent
     init_model_cone_center = getBinaryCenter(modelContours[0]);
 
     // Finds the initial vector for the top of the cone
-    init_model_cone_top = furthestEdge(modelContours[0], v2 {static_cast<float>(init_model_cone_center.x), static_cast<float>(init_model_cone_center.y)}, mode);
+    init_model_cone_top = furthestEdge(modelContours[0], init_model_cone_center, mode);
 
     // Add a small vector to the cones center
     new_model_cone_center = {static_cast<float>(init_model_cone_center.x) - ((init_model_cone_top[0].x - init_model_cone_center.x) / 3), static_cast<float>(init_model_cone_center.y) - ((init_model_cone_top[0].y - init_model_cone_center.y)/ 3)};
