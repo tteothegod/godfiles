@@ -24,11 +24,7 @@
 - Libtorch (Follow installation guide: https://pytorch.org/cppdocs/installing.html)
 
 ### Running the Project
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/yourusername/source-finder-w.git
-   cd source-finder-w
-   ```
+1. Clone the repository
 2. Set up dependencies (Python and C++ libraries as required).
 3. Compile the program: make DataPrep or make TrainModel (If needed use PYTORCH_LIB=/custom/path/to/libtorch/lib PYTORCH_INCLUDE=/custom/path/to/libtorch/include)
 4. Process and classify sources using the neural network.
