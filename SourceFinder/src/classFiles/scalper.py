@@ -20,7 +20,7 @@ def fetch_and_save_html(url, output_file="scraped0.html"):
         return output_file
     except requests.exceptions.RequestException as e:
         print(f"Error fetching {url}: {e}")
-        return None  # Indicate failure
+        return None
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

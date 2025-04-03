@@ -37,6 +37,7 @@ class HtmlParser
     bool searchInElement(std::vector<std::string>& foundStrings) const;
     std::vector<std::string> searchInElement(const std::string& strToFind) const;
 
+
     private:
     std::string htmlFileName;
     std::vector<std::string> htmlStrings;
