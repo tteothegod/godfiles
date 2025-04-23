@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include "HtmlParser.h"
 #include "WikiScalper.h"
 
@@ -87,6 +88,51 @@ public:
         negativeData = SourceData(databasePartIt, this->end());
         this->erase(databasePartIt, this->end());
     }
+
+    bool loadSourceData(std::vector<std::pair<std::string, int>>& loadedCitations, const std::string& filename) {
+        bool output = false;
+        std::ifstream inputFile(filename, std::ios::binary);
+
+        // Check if inputFile is open
+        if (inputFile.is_open()) {
+            size_t size;
+            inputFile.read(reinterpret_cast<char*>(&size), sizeof(size));  // Read the size of the vector
+
+            // Load each pair (citation and label)
+            for (size_t i = 0; i < size; ++i) {
+                size_t citationLength;
+                inputFile.read(reinterpret_cast<char*>(&citationLength), sizeof(citationLength));  // Read the length of the citation
+                std::string citation(citationLength, '\0');
+                inputFile.read(&citation[0], citationLength);  // Read the citation
+                int label;
+                inputFile.read(reinterpret_cast<char*>(&label), sizeof(label));  // Read the label
+                loadedCitations.push_back({citation, label});
+            }
+
+            std::cout << "Data loaded from " + filename << std::endl;
+
+            this->eraseSimilarCitations(loadedCitations);
+
+            output = true;
+        }
+        else { output = false; }
+    
+        inputFile.close();
+        return output;
+    }
+    
+void eraseSimilarCitations(const std::vector<std::pair<std::string, int>>& pairs) {
+    for (int i = this->size() - 1; i >= 0; --i) {
+        std::vector<std::vector<std::string>>& element = (*this)[i];
+        for (const auto& pair : pairs) {
+            if (element[0][0] == pair.first) {
+                this->erase(this->begin() + i);
+                break; // break to avoid double-erasing the same index
+            }
+        }
+    }
+}
+
 };
 
 class SourceRetriever

@@ -36,56 +36,16 @@ int main()
 
 
     std::vector<std::pair<std::string, int>> loadedCitations;
-
-    bool load = false;
-    {
-        std::string strInput;
-        while(strInput != "yes" && strInput != "no") {
-            std::cout << "Would you like to load the previous data? (yes or no)\n";
-            std::cin >> strInput;
-            if(strInput == "yes") load = true;
-        }  
-    }
-
     SourceData possibleSourcesCopy = SourceData(possiblyCredibleSources);
-    if(load) {
-        std::ifstream inputFile("labeled_citations.dat", std::ios::binary);
 
-        // Check if inputFile is open
-        if (inputFile.is_open()) {
-            size_t size;
-            inputFile.read(reinterpret_cast<char*>(&size), sizeof(size));  // Read the size of the vector
-
-            // Load each pair (citation and label)
-            for (size_t i = 0; i < size; ++i) {
-                size_t citationLength;
-                inputFile.read(reinterpret_cast<char*>(&citationLength), sizeof(citationLength));  // Read the length of the citation
-                std::string citation(citationLength, '\0');
-                inputFile.read(&citation[0], citationLength);  // Read the citation
-                int label;
-                inputFile.read(reinterpret_cast<char*>(&label), sizeof(label));  // Read the label
-                loadedCitations.push_back({citation, label});
-            }
-
-            std::cout << "Data loaded from labeled_citations.dat" << std::endl;
-
-            for(int i = 0; i < possibleSourcesCopy.size(); i++) {
-                std::vector<std::vector<std::string>>& element = possibleSourcesCopy[i];
-                for(std::pair<std::string, int>& pair: loadedCitations) {
-                    if(element[0][0] == pair.first) {
-                        possibleSourcesCopy.erase(possibleSourcesCopy.begin() + i);
-                    }
-                }
-            }
+    std::string strInput;
+    while(strInput != "yes" && strInput != "no") {
+        std::cout << "Would you like to load the previous data? (yes or no)\n";
+        std::cin >> strInput;
+        if(strInput == "yes") {
+            possibleSourcesCopy.loadSourceData(loadedCitations, "labeled_citations.dat");
         }
-
-        inputFile.close();
-    }
-
-
-
-
-
+    }  
 
 
     // Prompt user to label sources as 0 fro not credible and 1 for credible
@@ -116,7 +76,6 @@ int main()
         std::cout << "Citation: " << citation.first << " | Label: " << citation.second << std::endl;
     }
 
-
     {    
         std::string strInput;
         while(strInput != "yes" && strInput != "no") {
@@ -125,8 +84,6 @@ int main()
             if(strInput == "no") return -1;
         }  
     }
-
-
 
     std::ofstream outputFile("labeled_citations.dat", std::ios::binary);
     // Save the size of the vector first

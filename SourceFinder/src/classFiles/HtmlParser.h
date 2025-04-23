@@ -46,6 +46,8 @@ class HtmlParser
     void findHTMLIterators(int& itStart, int& itEnd, const std::string& strToFind, const std::string& tagToEnd) const;
     bool findSingleString(std::string& htmlLine, const std::string& strToFind, std::string& foundString) const;
 
+    void deleteHtmlTags(std::string& htmlLine) const;
+
 };
 
 void printComponents(const std::vector<std::vector<std::string>>& componentVector, const std::string& componentName);
