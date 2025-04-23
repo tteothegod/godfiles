@@ -1,8 +1,8 @@
 # Source Finder
-## Link: https://github.com/tteothegod/godfiles/tree/1996094c81a6bf2ec20baaf76d2edb58b21321bb/SourceFinder
+**Link:** https://github.com/tteothegod/godfiles/tree/1996094c81a6bf2ec20baaf76d2edb58b21321bb/SourceFinder
 
 ## Overview
-**Source Finder W** is a tool designed to help users quickly find and classify sources from Wikipedia. It scrapes and parses Wikipedia articles based on a search query and applies a neural network to determine whether each source is academically credible or not.
+**Source Finder** is a tool designed to help users quickly find and classify sources from Wikipedia. It scrapes and parses Wikipedia articles based on a search query and applies a neural network to determine whether each source is academically credible or not.
 
 ## Features
 - **Web Scraping**: Uses Python and Beautiful Soup to scrape and parse Wikipedia's HTML for external sources.
